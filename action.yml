@@ -30,7 +30,7 @@ inputs:
     default: ''
   ### Flags for mypy ###
   mypy_flags:
-    description: 'mypy's options (default: --strict --strict-equality)'
+    description: 'mypy options (default: --strict --strict-equality)'
     default: '--strict --strict-equality'
 runs:
   using: 'docker'
