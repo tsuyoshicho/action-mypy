@@ -7,6 +7,7 @@ fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
+# shellcheck disable=SC2086
 mypy --show-column-numbers ${INPUT_MYPY_FLAGS} "${INPUT_WORKDIR}" \
   | reviewdog -efm="%f:%l:%c: %t%*[^:]: %m"                       \
       -name="mypy"                                                \
