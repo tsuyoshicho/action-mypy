@@ -7,11 +7,11 @@ fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
-mypy --show-column-numbers "${INPUT_WORKDIR}"        \
-  | reviewdog -efm="%f:%l:%c: %t%*[^:]: %m"          \
-      -name="mypy"                                   \
-      -reporter="${INPUT_REPORTER:-github-pr-check}" \
-      -filter-mode="${INPUT_FILTER_MODE}"            \
-      -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
-      -level="${INPUT_LEVEL}"                        \
+mypy --show-column-numbers ${INPUT_MYPY_FLAGS} "${INPUT_WORKDIR}" \
+  | reviewdog -efm="%f:%l:%c: %t%*[^:]: %m"                       \
+      -name="mypy"                                                \
+      -reporter="${INPUT_REPORTER:-github-pr-check}"              \
+      -filter-mode="${INPUT_FILTER_MODE}"                         \
+      -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
+      -level="${INPUT_LEVEL}"                                     \
       ${INPUT_REVIEWDOG_FLAGS}

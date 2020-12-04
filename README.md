@@ -42,6 +42,10 @@ inputs:
   reviewdog_flags:
     description: 'Additional reviewdog flags'
     default: ''
+  ### Flags for mypy ###
+  mypy_flags:
+    description: 'mypy's options (default: --strict --strict-equality)'
+    default: '--strict --strict-equality'
 ```
 
 ## Usage
