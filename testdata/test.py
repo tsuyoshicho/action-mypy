@@ -6,5 +6,5 @@ def sub(a: int, b: int) -> int:
     return a - b
 
 
-def div(a: int, b: int) -> int:
+def div(a: int, b: int) -> None:
     return a // b
