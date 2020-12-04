@@ -9,8 +9,12 @@ jobs:
     name: runner / mypy (github-check)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: mypy-github-check
+        uses: ./
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-check
@@ -23,8 +27,12 @@ jobs:
     name: runner / mypy (github-pr-check)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: mypy-github-pr-check
+        uses: ./
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-check
@@ -37,8 +45,12 @@ jobs:
     name: runner / mypy (github-pr-review)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: mypy-github-pr-review
+        uses: ./
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
