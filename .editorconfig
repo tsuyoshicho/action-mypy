@@ -10,15 +10,16 @@ indent_style = space
 indent_size = 2
 
 # Extension
-[*.{vim,vital}]
+[*.py]
+indent_style = space
+indent_size = 4
 end_of_line = lf
 
 [*.sh]
 end_of_line = lf
 
 # File
-[Makefile]
+[Dockerfile]
 end_of_line = lf
-indent_style = tab
 
 # EOF
