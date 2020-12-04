@@ -1,6 +1,6 @@
-name: 'TODO: Run <linter-name> with reviewdog'
-description: 'TODO: 🐶 Run <linter-name> with reviewdog on pull requests to improve code review experience.'
-author: 'TODO: <your-name>'
+name: 'Run mypy with reviewdog'
+description: '🐶 Run mypy with reviewdog on pull requests to improve code review experience.'
+author: 'Tsuyoshi CHO <Tsuyoshi.CHO+develop@Gmail.com>'
 inputs:
   github_token:
     description: 'GITHUB_TOKEN'
@@ -27,10 +27,6 @@ inputs:
     default: 'false'
   reviewdog_flags:
     description: 'Additional reviewdog flags'
-    default: ''
-  ### Flags for <linter-name> ###
-  locale:
-    description: '-locale flag of misspell. (US/UK)'
     default: ''
 runs:
   using: 'docker'
