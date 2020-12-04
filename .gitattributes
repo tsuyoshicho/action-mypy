@@ -10,11 +10,10 @@
 
 
 # Extension
-*.vim          text eol=lf
-*.vital        text eol=lf
 *.sh           text eol=lf
+*.py           text eol=lf
 
 # File
-Makefile       text eol=lf
+Dockerfile     text eol=lf
 
 # EOF
