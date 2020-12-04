@@ -9,7 +9,7 @@ SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 # hadolint ignore=DL3006
 RUN apk --no-cache add git
 
-RUN pip install "mypy==$MYPY_VERSION" \
+RUN pip install "mypy==${MYPY_VERSION}" \
  && wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b /usr/local/bin/ ${REVIEWDOG_VERSION}
 
 COPY entrypoint.sh /entrypoint.sh
