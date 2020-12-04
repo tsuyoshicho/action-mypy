@@ -1,9 +1,9 @@
 # action-mypy
 
-[![Test](https://github.com/reviewdog/action-mypy/workflows/Test/badge.svg)](https://github.com/reviewdog/action-mypy/actions?query=workflow%3ATest)
-[![reviewdog](https://github.com/reviewdog/action-mypy/workflows/reviewdog/badge.svg)](https://github.com/reviewdog/action-mypy/actions?query=workflow%3Areviewdog)
-[![depup](https://github.com/reviewdog/action-mypy/workflows/depup/badge.svg)](https://github.com/reviewdog/action-mypy/actions?query=workflow%3Adepup)
-[![release](https://github.com/reviewdog/action-mypy/workflows/release/badge.svg)](https://github.com/reviewdog/action-mypy/actions?query=workflow%3Arelease)
+[![Test](https://github.com/tsuyoshicho/action-mypy/workflows/Test/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3ATest)
+[![reviewdog](https://github.com/tsuyoshicho/action-mypy/workflows/reviewdog/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3Areviewdog)
+[![depup](https://github.com/tsuyoshicho/action-mypy/workflows/depup/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3Adepup)
+[![release](https://github.com/tsuyoshicho/action-mypy/workflows/release/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3Arelease)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/reviewdog/action-mypy?logo=github&sort=semver)](https://github.com/reviewdog/action-mypy/releases)
 [![action-bumpr supported](https://img.shields.io/badge/bumpr-supported-ff69b4?logo=github&link=https://github.com/haya14busa/action-bumpr)](https://github.com/haya14busa/action-bumpr)
 
@@ -54,9 +54,8 @@ inputs:
 name: reviewdog
 on: [pull_request]
 jobs:
-  # TODO: change `linter_name`.
-  linter_name:
-    name: runner / <linter-name>
+  mypy:
+    name: runner / mypy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
