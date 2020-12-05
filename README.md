@@ -10,7 +10,7 @@
 ![github-pr-review demo](https://user-images.githubusercontent.com/96727/101124511-93c38700-363a-11eb-9a3c-899e7052e60b.png)
 ![github-pr-check demo](https://user-images.githubusercontent.com/96727/101124474-83131100-363a-11eb-990f-0824dc13f3e1.png)
 
-This is a ation-mypy repository for [reviewdog](https://github.com/reviewdog/reviewdog) action with release automation.
+This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/reviewdog) action with release automation.
 
 ## Input
 
