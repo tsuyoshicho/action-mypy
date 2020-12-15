@@ -11,7 +11,6 @@ export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 mypy --show-column-numbers ${INPUT_MYPY_FLAGS} "${INPUT_WORKDIR}" \
   | reviewdog                                                     \
       -efm="%f:%l:%c: %t%*[^:]: %m"                               \
-      -efm="%f:%l: %t%*[^:]: %m"                                  \
       -name="mypy"                                                \
       -reporter="${INPUT_REPORTER:-github-pr-check}"              \
       -filter-mode="${INPUT_FILTER_MODE}"                         \
