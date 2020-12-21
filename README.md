@@ -4,7 +4,7 @@
 [![reviewdog](https://github.com/tsuyoshicho/action-mypy/workflows/reviewdog/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3Areviewdog)
 [![depup](https://github.com/tsuyoshicho/action-mypy/workflows/depup/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3Adepup)
 [![release](https://github.com/tsuyoshicho/action-mypy/workflows/release/badge.svg)](https://github.com/tsuyoshicho/action-mypy/actions?query=workflow%3Arelease)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/reviewdog/action-mypy?logo=github&sort=semver)](https://github.com/reviewdog/action-mypy/releases)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tsuyoshicho/action-mypy?logo=github&sort=semver)](https://github.com/tsuyoshicho/action-mypy/releases)
 [![action-bumpr supported](https://img.shields.io/badge/bumpr-supported-ff69b4?logo=github&link=https://github.com/haya14busa/action-bumpr)](https://github.com/haya14busa/action-bumpr)
 
 ![github-pr-review demo](https://user-images.githubusercontent.com/96727/101124511-93c38700-363a-11eb-9a3c-899e7052e60b.png)
