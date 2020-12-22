@@ -18,35 +18,51 @@ This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/re
 inputs:
   github_token:
     description: 'GITHUB_TOKEN'
+    required: false
     default: '${{ github.token }}'
   workdir:
     description: 'Working directory relative to the root directory.'
+    required: false
     default: '.'
   ### Flags for reviewdog ###
   level:
     description: 'Report level for reviewdog [info,warning,error]'
+    required: false
     default: 'error'
   reporter:
-    description: 'Reporter of reviewdog command [github-pr-check,github-check,github-pr-review].'
+    description: 'Reporter of reviewdog command [github-pr-check,github-pr-review].'
+    required: false
     default: 'github-pr-check'
   filter_mode:
     description: |
       Filtering mode for the reviewdog command [added,diff_context,file,nofilter].
       Default is added.
+    required: false
     default: 'added'
   fail_on_error:
     description: |
       Exit code for reviewdog when errors are found [true,false]
       Default is `false`.
+    required: false
     default: 'false'
   reviewdog_flags:
     description: 'Additional reviewdog flags'
+    required: false
     default: ''
   ### Flags for mypy ###
   mypy_flags:
-    description: 'mypy options (default: --strict --strict-equality)'
-    default: '--strict --strict-equality'
+    description: 'mypy options (default: <none>)'
+    required: false
+    default: ''
 ```
+
+### Input note
+
+`mypy_flags` is used for workflow setting. (eg '--strict --strict-equality').
+
+But when this flag as set, ignore and do not affect setup.cfg or other mypy's settings file parameters.
+
+Use this flag when you want to check a workflow that is different from the project settings.
 
 ## Usage
 
