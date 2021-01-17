@@ -7,6 +7,13 @@ fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
+echo "[action-mypy] mypy version:"
+mypy --version
+
+echo "[action-mypy] reviewdog version:"
+reviewdog --version
+
+echo "[action-mypy] mypy and reviewdog output:"
 # shellcheck disable=SC2086
 mypy --show-column-numbers ${INPUT_MYPY_FLAGS} "${INPUT_WORKDIR}" \
   | reviewdog                                                     \
