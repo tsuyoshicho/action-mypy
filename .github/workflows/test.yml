@@ -57,3 +57,37 @@ jobs:
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
           workdir: ./testdata/
+
+  test-local:
+    name: runner / mypy (local)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: mypy-local
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: local
+          level: error
+          filter_mode: nofilter
+          fail_on_error: true
+          workdir: ./testdata/
+      - name: mypy-local-error
+        id: mypy_local_error
+        uses: ./
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: local
+          level: error
+          filter_mode: nofilter
+          fail_on_error: true
+          workdir: ./testerror/
+        continue-on-error: true
+      - name: mypy-local-error-should-failure
+        if: steps.mypy_local_error.outcome == 'success'
+        run: |
+          echo "::error file=.github/workflows/test.yml::mypy-local-error should outcome failure"
+          false
