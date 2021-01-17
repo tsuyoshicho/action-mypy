@@ -2,13 +2,17 @@
 set -e
 
 if [ -n "${GITHUB_WORKSPACE}" ] ; then
-  cd "${GITHUB_WORKSPACE}" || exit
+  cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit
 fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
 # shellcheck disable=SC2086
-mypy --show-column-numbers ${INPUT_MYPY_FLAGS} "${INPUT_WORKDIR}" \
+mypy \
+    --show-column-numbers \
+    --show-absolute-path \
+    ${INPUT_MYPY_FLAGS} \
+    "${INPUT_TARGET:-.}" \
   | reviewdog                                                     \
       -efm="%f:%l:%c: %t%*[^:]: %m"                               \
       -name="mypy"                                                \
