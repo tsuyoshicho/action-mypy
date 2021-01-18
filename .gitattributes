@@ -8,6 +8,7 @@
 # skip autocrlf,diff enable -> not binary, set -text
 .gitignore     -text
 
+.alexignore    eol=lf
 
 # Extension
 *.sh           text eol=lf
