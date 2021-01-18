@@ -21,7 +21,15 @@ inputs:
     required: false
     default: '${{ github.token }}'
   workdir:
-    description: 'Working directory relative to the root directory.'
+    description: |
+      Working directory of where to run mypy command.
+      Relative to the root directory.
+    required: false
+    default: '.'
+  target:
+    description: |
+      Target file or directory of mypy command.
+      Relative to the working directory.
     required: false
     default: '.'
   ### Flags for reviewdog ###
@@ -83,6 +91,9 @@ jobs:
           # Change reporter level if you need.
           # GitHub Status Check won't become failure with warning.
           level: warning
+          # Change the current directory to run mypy command.
+          # mypy commmand reads setup.cfg or other settings file in this path.
+          workdir: src
 ```
 
 ## Development
