@@ -21,7 +21,15 @@ inputs:
     required: false
     default: '${{ github.token }}'
   workdir:
-    description: 'Working directory relative to the root directory.'
+    description: |
+      Working directory of where to run mypy command.
+      Relative to the root directory.
+    required: false
+    default: '.'
+  target:
+    description: |
+      Target file or directory of mypy command.
+      Relative to the working directory.
     required: false
     default: '.'
   ### Flags for reviewdog ###
@@ -83,6 +91,9 @@ jobs:
           # Change reporter level if you need.
           # GitHub Status Check won't become failure with warning.
           level: warning
+          # Change the current directory to run mypy command.
+          # mypy command reads setup.cfg or other settings file in this path.
+          workdir: src
 ```
 
 ## Development
@@ -110,4 +121,3 @@ This repository uses [haya14busa/action-depup](https://github.com/haya14busa/act
 reviewdog version.
 
 [![reviewdog depup demo](https://user-images.githubusercontent.com/3797062/73154254-170e7500-411a-11ea-8211-912e9de7c936.png)](https://github.com/reviewdog/action-template/pull/6)
-
