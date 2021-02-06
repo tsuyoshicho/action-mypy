@@ -12,6 +12,14 @@
 
 This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/reviewdog) action with release automation.
 
+Notice:
+This action is `composition action`. It need `npm ci`.
+
+You accept below one:
+
+- Your workflow manually setup to run `pip install -r requirements.txt` or other setup method.
+- This action automatic run `pip install mypy`.
+
 ## Input
 
 ```yaml
@@ -62,6 +70,9 @@ inputs:
     description: 'mypy options (default: <none>)'
     required: false
     default: ''
+  tool_name:
+    description: 'Tool name to use for reviewdog reporter'
+    default: 'mypy'
 ```
 
 ### Input note
@@ -83,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: tsuyoshicho/action-mypy@v2
+      - uses: tsuyoshicho/action-mypy@v3
         with:
           github_token: ${{ secrets.github_token }}
           # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
