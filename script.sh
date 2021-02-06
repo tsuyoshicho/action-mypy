@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+set -eu # Increase bash strictness
+set -o pipefail
 
 # shellcheck disable=SC2086,SC2089,SC2090
 
@@ -31,19 +34,32 @@ export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
 
 echo '::group:: Running mypy with reviewdog 🐶 ...'
+mypy_exit_val="0"
+reviewdog_exit_val="0"
+
 # shellcheck disable=SC2086
-mypy                                                              \
-    --show-column-numbers                                         \
-    --show-absolute-path                                          \
-    ${INPUT_MYPY_FLAGS}                                           \
-    "${INPUT_TARGET:-.}"                                          \
-  | reviewdog                                                     \
+mypy_check_output="$(mypy --show-column-numbers     \
+                          --show-absolute-path      \
+                          ${INPUT_MYPY_FLAGS}       \
+                          "${INPUT_TARGET:-.}" 2>&1 \
+                          )" || mypy_exit_val="$?"
+
+# shellcheck disable=SC2086
+echo "${mypy_check_output}" | reviewdog                              \
       -efm="%f:%l:%c: %t%*[^:]: %m"                               \
       -name="mypy"                                                \
       -reporter="${INPUT_REPORTER:-github-pr-check}"              \
       -filter-mode="${INPUT_FILTER_MODE}"                         \
       -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
       -level="${INPUT_LEVEL}"                                     \
-      ${INPUT_REVIEWDOG_FLAGS}
+      ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
 echo '::endgroup::'
+
+# Throw error if an error occurred and fail_on_error is true
+if [[ "${INPUT_FAIL_ON_ERROR}" = 'true'  \
+  && ("${mypy_exit_val}" -ne '0'         \
+     || "${reviewdog_exit_val}" -eq "1") \
+  ]]; then
+  exit 1
+fi
 
