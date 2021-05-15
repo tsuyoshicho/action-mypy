@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -eu # Increase bash strictness
-set -o pipefail
-
 # shellcheck disable=SC2086,SC2089,SC2090
 
 cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit
@@ -45,21 +42,21 @@ mypy_check_output="$(mypy --show-column-numbers     \
                           )" || mypy_exit_val="$?"
 
 # shellcheck disable=SC2086
-echo "${mypy_check_output}" | reviewdog                              \
-      -efm="%f:%l:%c: %t%*[^:]: %m"                               \
-      -name="mypy"                                                \
-      -reporter="${INPUT_REPORTER:-github-pr-check}"              \
-      -filter-mode="${INPUT_FILTER_MODE}"                         \
-      -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
-      -level="${INPUT_LEVEL}"                                     \
+echo "${mypy_check_output}" | reviewdog              \
+      -efm="%f:%l:%c: %t%*[^:]: %m"                  \
+      -name="mypy"                                   \
+      -reporter="${INPUT_REPORTER:-github-pr-check}" \
+      -filter-mode="${INPUT_FILTER_MODE}"            \
+      -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
+      -level="${INPUT_LEVEL}"                        \
       ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
-if [[ "${INPUT_FAIL_ON_ERROR}" = 'true'  \
-  && ("${mypy_exit_val}" -ne '0'         \
-     || "${reviewdog_exit_val}" -eq "1") \
-  ]]; then
+if [[ "${INPUT_FAIL_ON_ERROR}" == "true"       \
+      && ( "${mypy_exit_val}" != "0"           \
+           || "${reviewdog_exit_val}" != "0" ) \
+   ]]; then
   exit 1
 fi
 
