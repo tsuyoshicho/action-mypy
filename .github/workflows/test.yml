@@ -4,6 +4,9 @@ on:
     branches:
       - master
   pull_request:
+permissions:
+  pull-requests: write
+
 jobs:
   test-check:
     name: runner / mypy (github-check)
