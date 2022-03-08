@@ -17,7 +17,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
       - name: mypy-github-check
         uses: ./
         with:
@@ -37,7 +37,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
       - name: mypy-github-pr-check
         uses: ./
         with:
@@ -57,7 +57,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
       - name: mypy-github-pr-review
         uses: ./
         with:
@@ -76,7 +76,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
       - name: mypy-local
         uses: ./
         with:
