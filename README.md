@@ -12,6 +12,11 @@
 
 This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/reviewdog) action with release automation.
 
+**Limitation**:
+**mypy report multiline error, but now, multiline error cannot be handled in one unit.**
+**It handles the error line by line.**
+see [Issue](https://github.com/tsuyoshicho/action-mypy/issues/38).
+
 Notice:
 This action is `composition action`. It need `npm ci`.
 
