@@ -18,7 +18,7 @@ This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/re
 see [Issue](https://github.com/tsuyoshicho/action-mypy/issues/38).
 
 Notice:
-This action is `composition action`. It need `npm ci`.
+This action is `composition action`.
 
 You accept below one:
 
