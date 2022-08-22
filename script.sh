@@ -44,7 +44,7 @@ mypy_check_output="$(mypy --show-column-numbers     \
 # shellcheck disable=SC2086
 echo "${mypy_check_output}" | reviewdog              \
       -efm="%f:%l:%c: %t%*[^:]: %m"                  \
-      -name="${INPUT_TOOL_NAME}"                     \
+      -name="${INPUT_TOOL_NAME:-mypy}"               \
       -reporter="${INPUT_REPORTER:-github-pr-check}" \
       -filter-mode="${INPUT_FILTER_MODE}"            \
       -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
