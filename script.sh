@@ -43,7 +43,7 @@ mypy_check_output="$(mypy --show-column-numbers     \
 
 # shellcheck disable=SC2086
 echo "${mypy_check_output}" | reviewdog              \
-      -efm="%G-%f:%l:%c: note: %m"                   \
+      -efm="%-G%f:%l:%c: note: %m"                   \
       -efm="%f:%l:%c: %t%*[^:]: %m"                  \
       -efm="%f:%l: %t%*[^:]: %m"                     \
       -efm="%f: %t%*[^:]: %m"                        \
