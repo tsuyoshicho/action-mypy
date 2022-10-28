@@ -45,6 +45,8 @@ mypy_check_output="$(mypy --show-column-numbers     \
 echo "${mypy_check_output}" | reviewdog              \
       -efm="%G-%f:%l:%c: note: %m"                   \
       -efm="%f:%l:%c: %t%*[^:]: %m"                  \
+      -efm="%f:%l: %t%*[^:]: %m"                     \
+      -efm="%f: %t%*[^:]: %m"                        \
       -name="${INPUT_TOOL_NAME:-mypy}"               \
       -reporter="${INPUT_REPORTER:-github-pr-check}" \
       -filter-mode="${INPUT_FILTER_MODE}"            \
