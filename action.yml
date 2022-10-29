@@ -51,6 +51,12 @@ inputs:
   tool_name:
     description: 'Tool name to use for reviewdog reporter'
     default: 'mypy'
+  ignore_note:
+    description: |
+      Ignore note entry.
+      mypy report some error with optional note entry.
+      This option is workaround.
+    default: 'false'
 runs:
   using: 'composite'
   steps:
@@ -70,6 +76,7 @@ runs:
         INPUT_REVIEWDOG_FLAGS: ${{ inputs.reviewdog_flags }}
         INPUT_MYPY_FLAGS: ${{ inputs.mypy_flags }}
         INPUT_TOOL_NAME: ${{ inputs.tool_name }}
+        INPUT_IGNORE_NOTE: ${{ inputs.ignore_note }}
 # Ref: https://haya14busa.github.io/github-action-brandings/
 branding:
   icon: 'check'

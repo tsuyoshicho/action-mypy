@@ -78,6 +78,12 @@ inputs:
   tool_name:
     description: 'Tool name to use for reviewdog reporter'
     default: 'mypy'
+  ignore_note:
+    description: |
+      Ignore note entry.
+      mypy report some error with optional note entry.
+      This option is workaround.
+    default: 'false'
 ```
 
 ### Input note
