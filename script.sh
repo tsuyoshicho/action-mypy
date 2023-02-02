@@ -41,7 +41,7 @@ mypy_check_output="$(mypy --show-column-numbers     \
                           "${INPUT_TARGET:-.}" 2>&1 \
                           )" || mypy_exit_val="$?"
 
-if [ "${INPUT_IGNORE_NOTE}" = "true" ] ; then
+if [[ "${INPUT_IGNORE_NOTE}" == "true" ]] ; then
   # note ignore
   # shellcheck disable=SC2086
   echo "${mypy_check_output}" | reviewdog              \
@@ -55,7 +55,6 @@ if [ "${INPUT_IGNORE_NOTE}" = "true" ] ; then
         -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
         -level="${INPUT_LEVEL}"                        \
         ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
-  echo '::endgroup::'
 else
   # shellcheck disable=SC2086
   echo "${mypy_check_output}" | reviewdog              \
@@ -68,8 +67,8 @@ else
         -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
         -level="${INPUT_LEVEL}"                        \
         ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
-  echo '::endgroup::'
 fi
+echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
 if [[ "${INPUT_FAIL_ON_ERROR}" == "true"       \
