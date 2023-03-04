@@ -44,7 +44,7 @@ mypy_check_output="$(mypy --show-column-numbers     \
 IGNORE_NOTE_EFM_OPTION=""
 if [[ "${INPUT_IGNORE_NOTE}" == "true" ]] ; then
   # note ignore
-  IGNORE_NOTE_EFM_OPTION="-efm=\"%-G%f:%l:%c: note: %m\""
+  IGNORE_NOTE_EFM_OPTION='-efm="%-G%f:%l:%c: note: %m"'
 fi
 
 # shellcheck disable=SC2086
