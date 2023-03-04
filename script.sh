@@ -41,33 +41,24 @@ mypy_check_output="$(mypy --show-column-numbers     \
                           "${INPUT_TARGET:-.}" 2>&1 \
                           )" || mypy_exit_val="$?"
 
+IGNORE_NOTE_EFM_OPTION=()
 if [[ "${INPUT_IGNORE_NOTE}" == "true" ]] ; then
   # note ignore
-  # shellcheck disable=SC2086
-  echo "${mypy_check_output}" | reviewdog              \
-        -efm="%-G%f:%l:%c: note: %m"                   \
-        -efm="%f:%l:%c: %t%*[^:]: %m"                  \
-        -efm="%f:%l: %t%*[^:]: %m"                     \
-        -efm="%f: %t%*[^:]: %m"                        \
-        -name="${INPUT_TOOL_NAME:-mypy}"               \
-        -reporter="${INPUT_REPORTER:-github-pr-check}" \
-        -filter-mode="${INPUT_FILTER_MODE}"            \
-        -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
-        -level="${INPUT_LEVEL}"                        \
-        ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
-else
-  # shellcheck disable=SC2086
-  echo "${mypy_check_output}" | reviewdog              \
-        -efm="%f:%l:%c: %t%*[^:]: %m"                  \
-        -efm="%f:%l: %t%*[^:]: %m"                     \
-        -efm="%f: %t%*[^:]: %m"                        \
-        -name="${INPUT_TOOL_NAME:-mypy}"               \
-        -reporter="${INPUT_REPORTER:-github-pr-check}" \
-        -filter-mode="${INPUT_FILTER_MODE}"            \
-        -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
-        -level="${INPUT_LEVEL}"                        \
-        ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
+  IGNORE_NOTE_EFM_OPTION=("-efm=%-G%f:%l:%c: note: %m")
 fi
+
+# shellcheck disable=SC2086
+echo "${mypy_check_output}" | reviewdog              \
+      "${IGNORE_NOTE_EFM_OPTION[@]}"                 \
+      -efm="%f:%l:%c: %t%*[^:]: %m"                  \
+      -efm="%f:%l: %t%*[^:]: %m"                     \
+      -efm="%f: %t%*[^:]: %m"                        \
+      -name="${INPUT_TOOL_NAME:-mypy}"               \
+      -reporter="${INPUT_REPORTER:-github-pr-check}" \
+      -filter-mode="${INPUT_FILTER_MODE}"            \
+      -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
+      -level="${INPUT_LEVEL}"                        \
+      ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
