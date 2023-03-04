@@ -45,6 +45,33 @@ inputs:
       Relative to the working directory.
     required: false
     default: '.'
+  ### Flags for setup/execute ###
+  execute_command:
+    description: |
+      mypy execute command.
+      Normally it is "mypy", but for example "poetry run mypy"
+      if you want to run at Poetry without activating the virtual environment.
+    required: false
+    default: 'mypy'
+  setup_command:
+    description: |
+      mypy setup command.
+      Runs when "setup_method" is "install" or required by "adaptive".
+    required: false
+    default: 'pip install mypy'
+  setup_method:
+    description: |
+      mypy setup method. Select from below.
+      "adaptive" - Check "execute_command" with "--version" is executable.
+      If it can be executed, do the same as "nothing", otherwise do the same as "install".
+      "nothing" - no setup process.
+      This option expects the user to prepare the environment
+      (ex. previous workflow step executed "pip install -r requirements.txt").
+      "install" - execute "setup_command".
+
+      Incorrect values behave as "adaptive".
+    required: false
+    default: 'adaptive'
   ### Flags for reviewdog ###
   level:
     description: 'Report level for reviewdog [info,warning,error]'
@@ -116,6 +143,29 @@ jobs:
           # Change the current directory to run mypy command.
           # mypy command reads setup.cfg or other settings file in this path.
           workdir: src
+```
+
+### Using with Poetry
+
+If you use mypy with [Poetry](https://github.com/python-poetry/poetry), you can use it with the following settings (if you don't use `poetry shell`).
+
+```yaml
+name: reviewdog
+on: [pull_request]
+jobs:
+  mypy:
+    name: runner / mypy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: tsuyoshicho/action-mypy@v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: warning
+          workdir: src
+          execute_command: 'poetry run mypy'
+          setup_method: 'nothing'
 ```
 
 ## Development
