@@ -147,7 +147,9 @@ jobs:
 
 ### Using with Poetry
 
-If you use mypy with [Poetry](https://github.com/python-poetry/poetry), you can use it with the following settings (if you don't use `poetry shell`).
+If you use mypy with [Poetry](https://github.com/python-poetry/poetry), you can use it with the following settings (`poetry shell` do not work in GitHub workflow, see [issue 66](https://github.com/tsuyoshicho/action-mypy/issues/66)).
+
+Example setting:
 
 ```yaml
 name: reviewdog
@@ -165,7 +167,6 @@ jobs:
           level: warning
           workdir: src
           execute_command: 'poetry run mypy'
-          setup_method: 'nothing'
 ```
 
 ## Development
