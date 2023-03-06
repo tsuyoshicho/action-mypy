@@ -11,31 +11,52 @@ echo '::group::🐶 Installing reviewdog ... https://github.com/reviewdog/review
 curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b "${TEMP_PATH}" "${REVIEWDOG_VERSION}" 2>&1
 echo '::endgroup::'
 
-echo '::group:: Installing mypy ...  https://github.com/python/mypy'
-if type "mypy" > /dev/null 2>&1 ; then
-  echo 'already installed'
-else
-  echo 'install mypy'
-  pip install mypy
+# check setup method
+SETUP="false"
+case "${INPUT_SETUP_METHOD}" in
+  "nothing")
+    SETUP="false"
+    ;;
+  "install")
+    SETUP="true"
+    ;;
+  *)
+    # adaptive and other invalid value
+    # Check execute_command is valid.
+    echo '::group:: Check command is executable'
+    echo "Execute command with version option: ${INPUT_EXECUTE_COMMAND} --version"
+    if ${INPUT_EXECUTE_COMMAND} --version > /dev/null 2>&1 ; then
+      echo 'Success command execution, skip installation.'
+      SETUP="false"
+    else
+      echo 'Failure command execution, execute installation.'
+      SETUP="true"
+    fi
+    echo '::endgroup::'
+    ;;
+esac
+
+# Install mypy if needed.
+if [[ "${SETUP}" == "true" ]] ; then
+  echo '::group:: Installing mypy ...  https://github.com/python/mypy'
+  echo "Execute setup: ${INPUT_SETUP_COMMAND}"
+  ${INPUT_SETUP_COMMAND}
+  echo '::endgroup::'
 fi
-
-if type "mypy" > /dev/null 2>&1 ; then
-  mypy --version
-else
-  echo 'This repository was not configured for mypy, process done.'
-  exit 1
-fi
-echo '::endgroup::'
-
-export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
-
 
 echo '::group:: Running mypy with reviewdog 🐶 ...'
 mypy_exit_val="0"
 reviewdog_exit_val="0"
 
+# Version output.
+echo "Execute command and version: ${INPUT_EXECUTE_COMMAND}"
+${INPUT_EXECUTE_COMMAND} --version
+
+export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
+
 # shellcheck disable=SC2086
-mypy_check_output="$(mypy --show-column-numbers     \
+mypy_check_output="$(${INPUT_EXECUTE_COMMAND}       \
+                          --show-column-numbers     \
                           --show-absolute-path      \
                           ${INPUT_MYPY_FLAGS}       \
                           "${INPUT_TARGET:-.}" 2>&1 \
