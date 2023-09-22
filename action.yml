@@ -14,7 +14,8 @@ inputs:
     default: '.'
   target:
     description: |
-      Target file or directory of mypy command.
+      Target files and/or directories of mypy command.
+      Enumerate in a space-separated list.
       Relative to the working directory.
     required: false
     default: '.'
