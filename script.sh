@@ -54,12 +54,15 @@ ${INPUT_EXECUTE_COMMAND} --version
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
+# safe extract files/dirs
+TARGETS_LIST="${INPUT_TARGET:-.}"
+
 # shellcheck disable=SC2086
-mypy_check_output="$(${INPUT_EXECUTE_COMMAND}       \
-                          --show-column-numbers     \
-                          --show-absolute-path      \
-                          ${INPUT_MYPY_FLAGS}       \
-                          "${INPUT_TARGET:-.}" 2>&1 \
+mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                          --show-column-numbers \
+                          --show-absolute-path  \
+                          ${INPUT_MYPY_FLAGS}   \
+                          ${TARGETS_LIST} 2>&1  \
                           )" || mypy_exit_val="$?"
 
 IGNORE_NOTE_EFM_OPTION=()
