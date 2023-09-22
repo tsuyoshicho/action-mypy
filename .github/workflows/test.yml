@@ -26,6 +26,7 @@ jobs:
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
           workdir: ./testdata/
+          target: success.py test.py
 
   test-pr-check:
     if: github.event_name == 'pull_request'
@@ -46,6 +47,7 @@ jobs:
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
           workdir: ./testdata/
+          target: success.py test.py
 
   test-pr-review:
     if: github.event_name == 'pull_request'
@@ -66,6 +68,7 @@ jobs:
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
           workdir: ./testdata/
+          target: success.py test.py
 
   test-local:
     name: runner / mypy (local)
@@ -86,6 +89,7 @@ jobs:
           filter_mode: nofilter
           fail_on_error: true
           workdir: ./testdata/
+          target: success.py test.py
       - name: mypy-local-error
         id: mypy_local_error
         uses: ./
@@ -96,6 +100,7 @@ jobs:
           filter_mode: nofilter
           fail_on_error: true
           workdir: ./testerror/
+          target: success.py test.py
         continue-on-error: true
       - name: mypy-local-error-should-failure
         if: steps.mypy_local_error.outcome == 'success'
