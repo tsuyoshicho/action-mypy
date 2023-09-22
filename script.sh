@@ -57,12 +57,6 @@ export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 # safe extract files/dirs
 TARGETS_LIST="${INPUT_TARGET:-.}"
 
-echo 'work dir: ${INPUT_WORKDIR}'
-echo 'work dir real path: ' $(pwd)
-echo 'target files/dirs: ${TARGETS_LIST}'
-echo 'work dir ls:'
-ls
-
 # shellcheck disable=SC2086
 mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
                           --show-column-numbers \
