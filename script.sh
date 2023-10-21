@@ -44,10 +44,7 @@ if [[ "${SETUP}" == "true" ]] ; then
   echo '::endgroup::'
 fi
 
-echo '::group:: Running mypy with reviewdog 🐶 ...'
-mypy_exit_val="0"
-reviewdog_exit_val="0"
-
+echo '::group:: Prepare reviewdog/mypy'
 # Version output.
 echo "Execute command and version: ${INPUT_EXECUTE_COMMAND}"
 ${INPUT_EXECUTE_COMMAND} --version
@@ -56,6 +53,7 @@ export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
 # safe extract files/dirs
 TARGETS_LIST="${INPUT_TARGET:-.}"
+echo '::endgroup::'
 
 # pre-run(missing stub detect)
 if [[ "${SETUP}" == "true" ]] ; then
@@ -70,6 +68,10 @@ if [[ "${SETUP}" == "true" ]] ; then
   ${INPUT_EXECUTE_COMMAND} --install-types --non-interactive
   echo '::endgroup::'
 fi
+
+echo '::group:: Running mypy with reviewdog 🐶 ...'
+mypy_exit_val="0"
+reviewdog_exit_val="0"
 
 # lint check
 # shellcheck disable=SC2086
