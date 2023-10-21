@@ -63,16 +63,16 @@ inputs:
   setup_method:
     description: |
       mypy setup method. Select from below.
-      "adaptive" - Check "execute_command" with "--version" is executable.
-      If it can be executed, do the same as "nothing", otherwise do the same as "install".
       "nothing" - no setup process.
       This option expects the user to prepare the environment
       (ex. previous workflow step executed "pip install -r requirements.txt").
+      "adaptive" - Check "execute_command" with "--version" is executable.
+      If it can be executed, do the same as "nothing", otherwise do the same as "install".
       "install" - execute "setup_command".
 
       Incorrect values behave as "adaptive".
     required: false
-    default: 'adaptive'
+    default: 'nothing'
   ### Flags for reviewdog ###
   level:
     description: 'Report level for reviewdog [info,warning,error]'
