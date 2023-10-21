@@ -57,6 +57,21 @@ export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 # safe extract files/dirs
 TARGETS_LIST="${INPUT_TARGET:-.}"
 
+# pre-run(missing stub detect)
+if [[ "${SETUP}" == "true" ]] ; then
+  echo '::group:: Installing types'
+  echo 'Pre-run and detect missing stubs'
+  # shellcheck disable=SC2086
+  mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                            ${TARGETS_LIST} 2>&1  \
+                            )" || mypy_exit_val="$?"
+  # discard result
+  echo 'Install types'
+  ${INPUT_EXECUTE_COMMAND} --install-types --non-interactive
+  echo '::endgroup::'
+fi
+
+# lint check
 # shellcheck disable=SC2086
 mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
                           --show-column-numbers \
