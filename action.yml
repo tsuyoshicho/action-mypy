@@ -31,6 +31,8 @@ inputs:
     description: |
       mypy setup command.
       Runs when "setup_method" is "install" or required by "adaptive".
+      If you want to fix the version of mypy, set the value as in the following example.
+      "pip install mypy==1.6.0"
     required: false
     default: 'pip install mypy'
   setup_method:
@@ -39,6 +41,7 @@ inputs:
       "nothing" - no setup process.
       This option expects the user to prepare the environment
       (ex. previous workflow step executed "pip install -r requirements.txt").
+      If you do not want immediately package installation (e.g., in a poetry environment), must be this.
       "adaptive" - Check "execute_command" with "--version" is executable.
       If it can be executed, do the same as "nothing", otherwise do the same as "install".
       "install" - execute "setup_command".
