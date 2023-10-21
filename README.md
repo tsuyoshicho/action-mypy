@@ -111,7 +111,7 @@ inputs:
       Ignore note entry.
       mypy report some error with optional note entry.
       This option is workaround.
-    default: 'false'
+    default: 'true'
 ```
 
 ### Input note
