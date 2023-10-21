@@ -58,21 +58,31 @@ inputs:
     description: |
       mypy setup command.
       Runs when "setup_method" is "install" or required by "adaptive".
+      If you want to fix the version of mypy, set the value as in the following example.
+      "pip install mypy==1.6.0"
     required: false
     default: 'pip install mypy'
   setup_method:
     description: |
       mypy setup method. Select from below.
-      "adaptive" - Check "execute_command" with "--version" is executable.
-      If it can be executed, do the same as "nothing", otherwise do the same as "install".
       "nothing" - no setup process.
       This option expects the user to prepare the environment
       (ex. previous workflow step executed "pip install -r requirements.txt").
+      If you do not want immediately package installation (e.g., in a poetry environment), must be this.
+      "adaptive" - Check "execute_command" with "--version" is executable.
+      If it can be executed, do the same as "nothing", otherwise do the same as "install".
       "install" - execute "setup_command".
 
       Incorrect values behave as "adaptive".
     required: false
-    default: 'adaptive'
+    default: 'nothing'
+  install_types:
+    description: |
+      Pre-run mypy and check for missing stubs.
+      Then perform stub installation.
+      (ex. ${execute_command} --install-types)
+    required: false
+    default: 'true'
   ### Flags for reviewdog ###
   level:
     description: 'Report level for reviewdog [info,warning,error]'
@@ -111,7 +121,7 @@ inputs:
       Ignore note entry.
       mypy report some error with optional note entry.
       This option is workaround.
-    default: 'false'
+    default: 'true'
 ```
 
 ### Input note
