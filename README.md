@@ -73,6 +73,13 @@ inputs:
       Incorrect values behave as "adaptive".
     required: false
     default: 'nothing'
+  install_types:
+    description: |
+      Pre-run mypy and check for missing stubs.
+      Then perform stub installation.
+      (ex. ${execute_command} --install-types)
+    required: false
+    default: 'true'
   ### Flags for reviewdog ###
   level:
     description: 'Report level for reviewdog [info,warning,error]'
