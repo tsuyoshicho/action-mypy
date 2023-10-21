@@ -56,7 +56,7 @@ TARGETS_LIST="${INPUT_TARGET:-.}"
 echo '::endgroup::'
 
 # pre-run(missing stub detect)
-if [[ "${SETUP}" == "true" ]] ; then
+if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
   echo '::group:: Installing types'
   echo 'Pre-run and detect missing stubs'
   # shellcheck disable=SC2086
