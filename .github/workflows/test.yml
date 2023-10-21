@@ -18,6 +18,12 @@ jobs:
           submodules: true
       - name: Setup Python
         uses: actions/setup-python@v4
+      - name: Setup Python package
+        shell: bash
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -r ./testdata/requirements.txt
       - name: mypy-github-check
         uses: ./
         with:
@@ -25,6 +31,7 @@ jobs:
           reporter: github-check
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
+          setup_method: install
           workdir: ./testdata/
           target: success.py test.py
 
@@ -39,6 +46,12 @@ jobs:
           submodules: true
       - name: Setup Python
         uses: actions/setup-python@v4
+      - name: Setup Python package
+        shell: bash
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -r ./testdata/requirements.txt
       - name: mypy-github-pr-check
         uses: ./
         with:
@@ -46,6 +59,7 @@ jobs:
           reporter: github-pr-check
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
+          setup_method: install
           workdir: ./testdata/
           target: success.py test.py
 
@@ -60,6 +74,12 @@ jobs:
           submodules: true
       - name: Setup Python
         uses: actions/setup-python@v4
+      - name: Setup Python package
+        shell: bash
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -r ./testdata/requirements.txt
       - name: mypy-github-pr-review
         uses: ./
         with:
@@ -67,6 +87,7 @@ jobs:
           reporter: github-pr-review
           level: warning
           reviewdog_flags: -filter-mode=file -fail-on-error
+          setup_method: install
           workdir: ./testdata/
           target: success.py test.py
 
@@ -80,6 +101,12 @@ jobs:
           submodules: true
       - name: Setup Python
         uses: actions/setup-python@v4
+      - name: Setup Python package
+        shell: bash
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -r ./testdata/requirements.txt
       - name: mypy-local
         uses: ./
         with:
@@ -88,8 +115,26 @@ jobs:
           level: error
           filter_mode: nofilter
           fail_on_error: true
+          setup_method: install
           workdir: ./testdata/
           target: success.py test.py
+
+  test-local-error:
+    name: runner / mypy (local error)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup Python
+        uses: actions/setup-python@v4
+      - name: Setup Python package
+        shell: bash
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -r ./testerror/requirements.txt
       - name: mypy-local-error
         id: mypy_local_error
         uses: ./
@@ -99,11 +144,17 @@ jobs:
           level: error
           filter_mode: nofilter
           fail_on_error: true
+          setup_method: install
           workdir: ./testerror/
           target: success.py test.py
         continue-on-error: true
-      - name: mypy-local-error-should-failure
+      - name: mypy-local-error-success
         if: steps.mypy_local_error.outcome == 'success'
         run: |
           echo "::error file=.github/workflows/test.yml::mypy-local-error should outcome failure"
-          false
+          exit 1
+      - name: mypy-local-error-failure
+        if: steps.mypy_local_error.outcome == 'failure'
+        run: |
+          echo "Error check OK"
+          exit 0
