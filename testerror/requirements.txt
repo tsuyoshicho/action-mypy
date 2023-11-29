@@ -16,7 +16,7 @@ colorama==0.4.6
     # via
     #   build
     #   click
-idna==3.5
+idna==3.6
     # via requests
 packaging==23.2
     # via build
