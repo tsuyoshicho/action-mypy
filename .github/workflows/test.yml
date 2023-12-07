@@ -17,7 +17,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Setup Python package
         shell: bash
         run: |
@@ -45,7 +45,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Setup Python package
         shell: bash
         run: |
@@ -73,7 +73,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Setup Python package
         shell: bash
         run: |
@@ -100,7 +100,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Setup Python package
         shell: bash
         run: |
@@ -128,7 +128,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Setup Python package
         shell: bash
         run: |
