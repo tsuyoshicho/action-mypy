@@ -4,7 +4,7 @@
 # - Any unset variable is an immediate error.
 # - Show trace executed statements
 # - Show the executed script before executing it.
-set -euxv
+set -eux
 
 # shellcheck disable=SC2086,SC2089,SC2090
 
@@ -42,16 +42,16 @@ case "${INPUT_SETUP_METHOD}" in
     ;;
 esac
 
-# Install mypy if needed.
-if [[ "${SETUP}" == "true" ]] ; then
-  echo '::group:: Installing mypy ...  https://github.com/python/mypy'
+echo '::group:: Install mypy (if needed)'
+
+if [[ "${SETUP}" == "true" ]] || ! mymy --version ; then
   echo "Execute setup: ${INPUT_SETUP_COMMAND}"
   ${INPUT_SETUP_COMMAND}
-  echo '::endgroup::'
 fi
 
+echo '::endgroup::'
 echo '::group:: Prepare reviewdog/mypy'
-# Version output.
+
 echo "Execute command and version: ${INPUT_EXECUTE_COMMAND}"
 ${INPUT_EXECUTE_COMMAND} --version
 
@@ -59,30 +59,16 @@ export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
 # safe extract files/dirs
 TARGETS_LIST="${INPUT_TARGET:-.}"
-echo '::endgroup::'
 
-# pre-run(missing stub detect)
+echo '::endgroup::'
+echo '::group:: Running mypy with reviewdog 🐶 ...'
+
 if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
-  echo '::group:: Installing types'
-  echo 'Pre-run and detect missing stubs'
-  # shellcheck disable=SC2086
-  mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
-                            ${TARGETS_LIST} 2>&1  \
-                            )" || mypy_exit_val="$?"
-  # discard result
-  echo 'Install types'
-  ${INPUT_EXECUTE_COMMAND} --install-types --non-interactive
-  echo '::endgroup::'
+  INPUT_MYPY_FLAGS="${INPUT_MYPY_FLAGS} --install-types --non-interactive"
 fi
 
-echo '::group:: Running mypy with reviewdog 🐶 ...'
 mypy_exit_val="0"
 reviewdog_exit_val="0"
-
-# Below from this line, errors are handled.
-# (mypy_exit_val and reviewdog_exit_val)
-# Disable error report
-set +e
 
 # lint check
 # shellcheck disable=SC2086
