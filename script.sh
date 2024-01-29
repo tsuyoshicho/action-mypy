@@ -79,6 +79,11 @@ echo '::group:: Running mypy with reviewdog 🐶 ...'
 mypy_exit_val="0"
 reviewdog_exit_val="0"
 
+# Below from this line, errors are handled.
+# (mypy_exit_val and reviewdog_exit_val)
+# Disable error report
+set +e
+
 # lint check
 # shellcheck disable=SC2086
 mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
@@ -115,4 +120,3 @@ if [[ "${INPUT_FAIL_ON_ERROR}" == "true"       \
    ]]; then
   exit 1
 fi
-
