@@ -142,8 +142,8 @@ jobs:
     name: runner / mypy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: tsuyoshicho/action-mypy@v3
+      - uses: actions/checkout@v4
+      - uses: tsuyoshicho/action-mypy@v4
         with:
           github_token: ${{ secrets.github_token }}
           # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
@@ -170,8 +170,8 @@ jobs:
     name: runner / mypy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: tsuyoshicho/action-mypy@v3
+      - uses: actions/checkout@v4
+      - uses: tsuyoshicho/action-mypy@v4
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
