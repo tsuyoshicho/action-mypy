@@ -87,9 +87,10 @@ set +e
 # lint check
 # shellcheck disable=SC2086
 mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                          ${INPUT_MYPY_FLAGS}   \
+                          --no-pretty           \
                           --show-column-numbers \
                           --show-absolute-path  \
-                          ${INPUT_MYPY_FLAGS}   \
                           ${TARGETS_LIST} 2>&1  \
                           )" || mypy_exit_val="$?"
 
