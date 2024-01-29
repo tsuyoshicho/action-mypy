@@ -101,7 +101,7 @@ if [[ "${INPUT_IGNORE_NOTE}" == "true" ]] ; then
 fi
 
 # shellcheck disable=SC2086
-echo "${mypy_check_output}" | reviewdog              \
+echo "${mypy_check_output}" | reviewdog -tee         \
       "${IGNORE_NOTE_EFM_OPTION[@]}"                 \
       -efm="%f:%l:%c: %t%*[^:]: %m"                  \
       -efm="%f:%l: %t%*[^:]: %m"                     \
