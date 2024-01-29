@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# - Exit with error on any failed command.
+# - Any unset variable is an immediate error.
+# - Show trace executed statements
+# - Show the executed script before executing it.
+set -euxv
+
 # shellcheck disable=SC2086,SC2089,SC2090
 
 cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit
