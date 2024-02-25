@@ -180,11 +180,16 @@ jobs:
           execute_command: 'poetry run mypy'
 ```
 
+### Debug output
+
+You can set the "-tee" [flag](https://github.com/reviewdog/reviewdog#debugging) in the `reviewdog_flags` to log the process.
+
 ## Development
 
 ### Release
 
 #### [haya14busa/action-bumpr](https://github.com/haya14busa/action-bumpr)
+
 You can bump version on merging Pull Requests with specific labels (bump:major,bump:minor,bump:patch).
 Pushing tag manually by yourself also work.
 
@@ -201,6 +206,7 @@ which is useful for Docker container based actions.
 ![reviewdog integration](https://user-images.githubusercontent.com/3797062/72735107-7fbb9600-3bde-11ea-8087-12af76e7ee6f.png)
 
 ### Dependencies Update Automation
+
 This repository uses [haya14busa/action-depup](https://github.com/haya14busa/action-depup) to update
 reviewdog version.
 
