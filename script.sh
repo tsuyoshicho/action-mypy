@@ -85,11 +85,16 @@ reviewdog_exit_val="0"
 set +e
 
 # lint check
+# Flags
+#   first, user flags
+#   second, set reviewdog supplement flags(abspath, column num) and suppress pretty flag
+# same flag: win later
 # shellcheck disable=SC2086
 mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                          ${INPUT_MYPY_FLAGS}   \
                           --show-column-numbers \
                           --show-absolute-path  \
-                          ${INPUT_MYPY_FLAGS}   \
+                          --no-pretty           \
                           ${TARGETS_LIST} 2>&1  \
                           )" || mypy_exit_val="$?"
 
