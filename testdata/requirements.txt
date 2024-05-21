@@ -24,7 +24,7 @@ pip-tools==7.4.1
     # via -r requirements.in
 pyproject-hooks==1.1.0
     # via build
-requests==2.31.0
+requests==2.32.1
     # via -r requirements.in
 urllib3==2.2.1
     # via requests
