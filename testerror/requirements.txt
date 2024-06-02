@@ -12,6 +12,10 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via pip-tools
+colorama==0.4.6
+    # via
+    #   build
+    #   click
 idna==3.7
     # via requests
 packaging==24.0
