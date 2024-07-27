@@ -9,7 +9,6 @@ URL: https://github.com/jordemort/action-pyright/blob/main/LICENSE
 
 import json
 import sys
-
 from typing import Any, Dict, TextIO
 
 
@@ -35,23 +34,29 @@ def mypy_to_rdjson(jsonlines: TextIO):
         # If there is a rule name, append it to the message
         error_code = d.get("code", None)
         if error_code is not None:
-            message = f"{message} ({error_code})"
+            message = f"{message} [{error_code}]"
 
-        rdjson["diagnostics"].append(
-            {
-                "message": message,
-                "severity": d["severity"].upper(),
-                "location": {
-                    "path": d["file"],
-                    "range": {
-                        "start": {
-                            "line": d["line"],
-                            "column": d["column"],
-                        },
+        # mypy errror context: ignore it. not support display (line&column are undefined)
+        #  severity: note
+        #  line and column: -1,-1
+        if (d["severity"].upper() == "NOTE"
+                and int(d["line"]) == -1
+                and int(d["column"]) == -1):
+            continue
+
+        rdjson["diagnostics"].append({
+            "message": message,
+            "severity": d["severity"].upper(),
+            "location": {
+                "path": d["file"],
+                "range": {
+                    "start": {
+                        "line": d["line"],
+                        "column": d["column"],
                     },
                 },
-            }
-        )
+            },
+        })
 
     return json.dumps(rdjson)
 
