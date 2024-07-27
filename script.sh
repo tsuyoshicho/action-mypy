@@ -89,27 +89,23 @@ set +e
 #   first, user flags
 #   second, set reviewdog supplement flags(abspath, column num) and suppress pretty flag
 # same flag: win later
+# --hide-error-context : suppress error context NOTE: entry
 # shellcheck disable=SC2086
 mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
                           ${INPUT_MYPY_FLAGS}   \
+                          --output json         \
+                          --hide-error-context  \
                           --show-column-numbers \
                           --show-absolute-path  \
                           --no-pretty           \
                           ${TARGETS_LIST} 2>&1  \
                           )" || mypy_exit_val="$?"
 
-IGNORE_NOTE_EFM_OPTION=()
-if [[ "${INPUT_IGNORE_NOTE}" == "true" ]] ; then
-  # note ignore
-  IGNORE_NOTE_EFM_OPTION=("-efm=%-G%f:%l:%c: note: %m")
-fi
-
 # shellcheck disable=SC2086
-echo "${mypy_check_output}" | reviewdog              \
-      "${IGNORE_NOTE_EFM_OPTION[@]}"                 \
-      -efm="%f:%l:%c: %t%*[^:]: %m"                  \
-      -efm="%f:%l: %t%*[^:]: %m"                     \
-      -efm="%f: %t%*[^:]: %m"                        \
+echo "${mypy_check_output}" |                        \
+      python ./mypy_to_rdjson/mypy_to_rdjson.py |    \
+      reviewdog                                      \
+      -f=rdjson                                      \
       -name="${INPUT_TOOL_NAME:-mypy}"               \
       -reporter="${INPUT_REPORTER:-github-pr-check}" \
       -filter-mode="${INPUT_FILTER_MODE}"            \

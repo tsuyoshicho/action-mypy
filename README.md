@@ -17,6 +17,8 @@ This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/re
 **It handles the error line by line.**
 see [Issue](https://github.com/tsuyoshicho/action-mypy/issues/38).
 
+**This action require mypy==1.11 or higher**
+
 Notice:
 This action is `composition action`.
 
@@ -118,6 +120,10 @@ inputs:
     default: 'mypy'
   ignore_note:
     description: |
+      Currentry always enable this option
+      Ignore error context NOTE: entry
+
+      old description:
       Ignore note entry.
       mypy report some error with optional note entry.
       This option is workaround.
@@ -128,9 +134,7 @@ inputs:
 
 `mypy_flags` is used for workflow setting. (eg '--strict --strict-equality').
 
-But when this flag as set, ignore and do not affect setup.cfg or other mypy's settings file parameters.
-
-Use this flag when you want to check a workflow that is different from the project settings.
+Currentry always suppress note.
 
 ## Usage
 

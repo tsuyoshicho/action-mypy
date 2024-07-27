@@ -91,6 +91,10 @@ inputs:
     default: 'mypy'
   ignore_note:
     description: |
+      Currentry always enable this option
+      Ignore error context NOTE: entry
+
+      old description:
       Ignore note entry.
       mypy report some error with optional note entry.
       This option is workaround.
@@ -117,7 +121,7 @@ runs:
         INPUT_REVIEWDOG_FLAGS: ${{ inputs.reviewdog_flags }}
         INPUT_MYPY_FLAGS: ${{ inputs.mypy_flags }}
         INPUT_TOOL_NAME: ${{ inputs.tool_name }}
-        INPUT_IGNORE_NOTE: ${{ inputs.ignore_note }}
+        # INPUT_IGNORE_NOTE: ${{ inputs.ignore_note }}
         INPUT_INSTALL_TYPES: ${{ inputs.install_types }}
 # Ref: https://haya14busa.github.io/github-action-brandings/
 branding:
