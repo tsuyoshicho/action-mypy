@@ -125,15 +125,15 @@ echo "mypy output rdjson:"
 cat "${MYPYTMPDIR}/mypy_rdjson.json"
 
 # shellcheck disable=SC2086
-cat "${MYPYTMPDIR}/mypy_rdjson.json" | \
-      reviewdog                                      \
-      -f=rdjson                                      \
-      -name="${INPUT_TOOL_NAME:-mypy}"               \
-      -reporter="${INPUT_REPORTER:-github-pr-check}" \
-      -filter-mode="${INPUT_FILTER_MODE}"            \
-      -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
-      -level="${INPUT_LEVEL}"                        \
-      ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
+reviewdog                                                     \
+  -f=rdjson                                                   \
+  -name="${INPUT_TOOL_NAME:-mypy}"                            \
+  -reporter="${INPUT_REPORTER:-github-pr-check}"              \
+  -filter-mode="${INPUT_FILTER_MODE}"                         \
+  -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
+  -level="${INPUT_LEVEL}"                                     \
+  ${INPUT_REVIEWDOG_FLAGS} < "${MYPYTMPDIR}/mypy_rdjson.json" \
+  || reviewdog_exit_val="$?"
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
