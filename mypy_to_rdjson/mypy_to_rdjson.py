@@ -18,8 +18,12 @@ def mypy_to_rdjson(jsonlines: TextIO):
     for json_item in jsonlines.readlines():
         mypy_result.append(json.loads(json_item))
 
+    # "$schema": "https://raw.githubusercontent.com/reviewdog/reviewdog/master/proto/rdf/jsonschema/DiagnosticResult.json",
     rdjson: Dict[str, Any] = {
-        "source": {"name": "mypy", "url": "https://mypy-lang.org/"},
+        "source": {
+            "name": "mypy",
+            "url": "https://mypy-lang.org/",
+        },
         "severity": "WARNING",
         "diagnostics": [],
     }
