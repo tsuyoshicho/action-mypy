@@ -102,8 +102,8 @@ mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
                           )" || mypy_exit_val="$?"
 
 # shellcheck disable=SC2086
-echo "${mypy_check_output}" |                        \
-      python ./mypy_to_rdjson/mypy_to_rdjson.py |    \
+echo "${mypy_check_output}" | \
+      python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" | \
       reviewdog                                      \
       -f=rdjson                                      \
       -name="${INPUT_TOOL_NAME:-mypy}"               \
