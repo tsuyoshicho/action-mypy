@@ -68,9 +68,9 @@ if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
   echo '::group:: Installing types'
   echo 'Pre-run and detect missing stubs'
   # shellcheck disable=SC2086
-  mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
-                            ${TARGETS_LIST} 2>&1  \
-                            )" || mypy_exit_val="$?"
+  ${INPUT_EXECUTE_COMMAND} \
+    ${TARGETS_LIST} 2>&1   \
+     || mypy_exit_val="$?"
   # discard result
   echo 'Install types'
   ${INPUT_EXECUTE_COMMAND} --install-types --non-interactive
@@ -116,13 +116,13 @@ ${INPUT_EXECUTE_COMMAND}           \
   2> /dev/null                     \
   || mypy_exit_val="$?"
 
-echo "mypy output result:"
-cat "${MYPYTMPDIR}/mypy_output.json"
+# echo "mypy output result:"
+# cat "${MYPYTMPDIR}/mypy_output.json"
 
 python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" < "${MYPYTMPDIR}/mypy_output.json" > "${MYPYTMPDIR}/mypy_rdjson.json"
 
-echo "mypy output rdjson:"
-cat "${MYPYTMPDIR}/mypy_rdjson.json"
+# echo "mypy output rdjson:"
+# cat "${MYPYTMPDIR}/mypy_rdjson.json"
 
 # shellcheck disable=SC2086
 reviewdog                                                     \
