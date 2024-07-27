@@ -9,14 +9,10 @@ URL: https://github.com/jordemort/action-pyright/blob/main/LICENSE
 
 import json
 import sys
-from typing import Any, Dict, TextIO
+from typing import (Any, Dict, List, TextIO)
 
 
 def mypy_to_rdjson(jsonlines: TextIO):
-    mypy_result: List = []
-    for json_item in jsonlines.readlines():
-        mypy_result.append(json.loads(json_item))
-
     # "$schema": "https://raw.githubusercontent.com/reviewdog/reviewdog/master/proto/rdf/jsonschema/DiagnosticResult.json",
     rdjson: Dict[str, Any] = {
         "source": {
@@ -26,6 +22,14 @@ def mypy_to_rdjson(jsonlines: TextIO):
         "severity": "WARNING",
         "diagnostics": [],
     }
+
+    mypy_result: List = []
+    try:
+        for json_item in jsonlines.readlines():
+            mypy_result.append(json.loads(json_item))
+    except Exception:
+        # decode error, return data nothing JSON
+        return json.dumps(rdjson)
 
     d: Dict
     for d in mypy_result:
