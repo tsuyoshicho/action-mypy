@@ -1,11 +1,11 @@
-```
+"""
 This code based on https://github.com/jordemort/action-pyright/blob/main/pyright_to_rdjson/pyright_to_rdjson.py
 Original license :
 MIT License
 
 Copyright (c) 2021 Jordan Webb
 URL: https://github.com/jordemort/action-pyright/blob/main/LICENSE
-```
+"""
 
 import json
 import sys
@@ -13,26 +13,25 @@ import sys
 from typing import Any, Dict, TextIO
 
 
-def pyright_to_rdjson(jsonin: TextIO):
-    pyright: Dict = json.load(jsonin)
-
-    if "generalDiagnostics" not in pyright:
-        raise RuntimeError("This doesn't look like pyright json")
+def mypy_to_rdjson(jsonlines: TextIO):
+    mypy_result: List = []
+    for json_item in jsonlines.readlines():
+        mypy_result.append(json.loads(json_item))
 
     rdjson: Dict[str, Any] = {
-        "source": {"name": "pyright", "url": "https://github.com/Microsoft/pyright"},
+        "source": {"name": "mypy", "url": "https://mypy-lang.org/"},
         "severity": "WARNING",
         "diagnostics": [],
     }
 
     d: Dict
-    for d in pyright["generalDiagnostics"]:
+    for d in mypy_result:
         message = d["message"]
 
         # If there is a rule name, append it to the message
-        rule = d.get("rule", None)
-        if rule is not None:
-            message = f"{message} ({rule})"
+        error_code = d.get("code", None)
+        if error_code is not None:
+            message = f"{message} ({error_code})"
 
         rdjson["diagnostics"].append(
             {
@@ -42,13 +41,8 @@ def pyright_to_rdjson(jsonin: TextIO):
                     "path": d["file"],
                     "range": {
                         "start": {
-                            # pyright uses zero-based offsets
-                            "line": d["range"]["start"]["line"] + 1,
-                            "column": d["range"]["start"]["character"] + 1,
-                        },
-                        "end": {
-                            "line": d["range"]["end"]["line"] + 1,
-                            "column": d["range"]["end"]["character"] + 1,
+                            "line": d["line"],
+                            "column": d["column"],
                         },
                     },
                 },
@@ -59,4 +53,4 @@ def pyright_to_rdjson(jsonin: TextIO):
 
 
 if __name__ == "__main__":
-    print(pyright_to_rdjson(sys.stdin))
+    print(mypy_to_rdjson(sys.stdin))
