@@ -6,6 +6,8 @@
 # - Show the executed script before executing it.
 set -euxv
 
+BASE_PATH="$(cd "$(dirname "$0")" && pwd)"
+
 # shellcheck disable=SC2086,SC2089,SC2090
 
 cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit
@@ -75,6 +77,17 @@ if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
   echo '::endgroup::'
 fi
 
+
+# cleanup function
+cleanup() {
+  if [ -n "${MYPYTMPDIR:-}" ] && [ -d "${MYPYTMPDIR:-}" ]; then
+    rm -rf "$MYPYTMPDIR"
+  fi
+}
+
+MYPYTMPDIR=$(mktemp -d)
+trap cleanup EXIT
+
 echo '::group:: Running mypy with reviewdog 🐶 ...'
 mypy_exit_val="0"
 reviewdog_exit_val="0"
@@ -91,19 +104,28 @@ set +e
 # same flag: win later
 # --hide-error-context : suppress error context NOTE: entry
 # shellcheck disable=SC2086
-mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
-                          ${INPUT_MYPY_FLAGS}   \
-                          --output json         \
-                          --hide-error-context  \
-                          --show-column-numbers \
-                          --show-absolute-path  \
-                          --no-pretty           \
-                          ${TARGETS_LIST} 2>&1  \
-                          )" || mypy_exit_val="$?"
+${INPUT_EXECUTE_COMMAND}           \
+  ${INPUT_MYPY_FLAGS}              \
+  --output json                    \
+  --hide-error-context             \
+  --show-column-numbers            \
+  --show-absolute-path             \
+  --no-pretty                      \
+  ${TARGETS_LIST}                  \
+  > ${MYPYTMPDIR}/mypy_output.json \
+  2> /dev/null                     \
+  || mypy_exit_val="$?"
+
+echo "mypy output result:"
+cat "${MYPYTMPDIR}/mypy_output.json"
+
+python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" < "${MYPYTMPDIR}/mypy_output.json" > "${MYPYTMPDIR}/mypy_rdjson.json"
+
+echo "mypy output rdjson:"
+cat "${MYPYTMPDIR}/mypy_rdjson.json"
 
 # shellcheck disable=SC2086
-echo "${mypy_check_output}" | \
-      python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" | \
+cat "${MYPYTMPDIR}/mypy_rdjson.json" | \
       reviewdog                                      \
       -f=rdjson                                      \
       -name="${INPUT_TOOL_NAME:-mypy}"               \
