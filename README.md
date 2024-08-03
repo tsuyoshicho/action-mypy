@@ -13,9 +13,7 @@
 This is a action-mypy repository for [reviewdog](https://github.com/reviewdog/reviewdog) action with release automation.
 
 **Limitation**:
-**mypy report multiline error, but now, multiline error cannot be handled in one unit.**
-**It handles the error line by line.**
-see [Issue](https://github.com/tsuyoshicho/action-mypy/issues/38).
+**mypy report multiline error, but now, multiline error may be handled under JSON output is enabled.**
 
 Notice:
 This action is `composition action`.
@@ -118,19 +116,31 @@ inputs:
     default: 'mypy'
   ignore_note:
     description: |
+      Currently, this option is always true.
+      Ignore "note: entries" that as reported by mypy.
+
+      Old description:
       Ignore note entry.
       mypy report some error with optional note entry.
       This option is workaround.
+    required: false
     default: 'true'
+  output_json:
+    description: |
+      Use the JSON output format available in mypy 1.11 or higher.
+
+      This option defaults to false due to version limitations
+      and because it is still experimental.
+      Note the mypy version when setting to true.
+    required: false
+    default: 'false'
 ```
 
 ### Input note
 
 `mypy_flags` is used for workflow setting. (eg '--strict --strict-equality').
 
-But when this flag as set, ignore and do not affect setup.cfg or other mypy's settings file parameters.
-
-Use this flag when you want to check a workflow that is different from the project settings.
+Currently always suppress note.
 
 ## Usage
 

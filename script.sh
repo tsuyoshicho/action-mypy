@@ -6,6 +6,8 @@
 # - Show the executed script before executing it.
 set -euxv
 
+BASE_PATH="$(cd "$(dirname "$0")" && pwd)"
+
 # shellcheck disable=SC2086,SC2089,SC2090
 
 cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit
@@ -75,6 +77,17 @@ if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
   echo '::endgroup::'
 fi
 
+
+# cleanup function
+cleanup() {
+  if [ -n "${MYPYTMPDIR:-}" ] && [ -d "${MYPYTMPDIR:-}" ]; then
+    rm -rf "$MYPYTMPDIR"
+  fi
+}
+
+MYPYTMPDIR=$(mktemp -d)
+trap cleanup EXIT
+
 echo '::group:: Running mypy with reviewdog 🐶 ...'
 mypy_exit_val="0"
 reviewdog_exit_val="0"
@@ -89,33 +102,73 @@ set +e
 #   first, user flags
 #   second, set reviewdog supplement flags(abspath, column num) and suppress pretty flag
 # same flag: win later
-# shellcheck disable=SC2086
-mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
-                          ${INPUT_MYPY_FLAGS}   \
-                          --show-column-numbers \
-                          --show-absolute-path  \
-                          --no-pretty           \
-                          ${TARGETS_LIST} 2>&1  \
-                          )" || mypy_exit_val="$?"
 
-IGNORE_NOTE_EFM_OPTION=()
-if [[ "${INPUT_IGNORE_NOTE}" == "true" ]] ; then
+if [[ "${INPUT_OUTPUT_JSON}" != "true" ]] ; then
+  # Do not use JSON output
+
+  # shellcheck disable=SC2086
+  mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                            ${INPUT_MYPY_FLAGS}   \
+                            --show-column-numbers \
+                            --show-absolute-path  \
+                            --no-pretty           \
+                            ${TARGETS_LIST} 2>&1  \
+                            )" || mypy_exit_val="$?"
+
   # note ignore
   IGNORE_NOTE_EFM_OPTION=("-efm=%-G%f:%l:%c: note: %m")
+
+  # shellcheck disable=SC2086
+  echo "${mypy_check_output}" | reviewdog              \
+        "${IGNORE_NOTE_EFM_OPTION[@]}"                 \
+        -efm="%f:%l:%c: %t%*[^:]: %m"                  \
+        -efm="%f:%l: %t%*[^:]: %m"                     \
+        -efm="%f: %t%*[^:]: %m"                        \
+        -name="${INPUT_TOOL_NAME:-mypy}"               \
+        -reporter="${INPUT_REPORTER:-github-pr-check}" \
+        -filter-mode="${INPUT_FILTER_MODE}"            \
+        -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
+        -level="${INPUT_LEVEL}"                        \
+        ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
+
+else
+  # Use JSON output
+  # require mypy==1.11 or higher
+
+  # --hide-error-context : suppress error context NOTE: entry
+  # shellcheck disable=SC2086
+  ${INPUT_EXECUTE_COMMAND}           \
+    ${INPUT_MYPY_FLAGS}              \
+    --output json                    \
+    --hide-error-context             \
+    --show-column-numbers            \
+    --show-absolute-path             \
+    --no-pretty                      \
+    ${TARGETS_LIST}                  \
+    > ${MYPYTMPDIR}/mypy_output.json \
+    2> /dev/null                     \
+    || mypy_exit_val="$?"
+
+  # echo "mypy output result:"
+  # cat "${MYPYTMPDIR}/mypy_output.json"
+
+  python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" < "${MYPYTMPDIR}/mypy_output.json" > "${MYPYTMPDIR}/mypy_rdjson.json"
+
+  # echo "mypy output rdjson:"
+  # cat "${MYPYTMPDIR}/mypy_rdjson.json"
+
+  # shellcheck disable=SC2086
+  reviewdog                                                     \
+    -f=rdjson                                                   \
+    -name="${INPUT_TOOL_NAME:-mypy}"                            \
+    -reporter="${INPUT_REPORTER:-github-pr-check}"              \
+    -filter-mode="${INPUT_FILTER_MODE}"                         \
+    -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
+    -level="${INPUT_LEVEL}"                                     \
+    ${INPUT_REVIEWDOG_FLAGS} < "${MYPYTMPDIR}/mypy_rdjson.json" \
+    || reviewdog_exit_val="$?"
 fi
 
-# shellcheck disable=SC2086
-echo "${mypy_check_output}" | reviewdog              \
-      "${IGNORE_NOTE_EFM_OPTION[@]}"                 \
-      -efm="%f:%l:%c: %t%*[^:]: %m"                  \
-      -efm="%f:%l: %t%*[^:]: %m"                     \
-      -efm="%f: %t%*[^:]: %m"                        \
-      -name="${INPUT_TOOL_NAME:-mypy}"               \
-      -reporter="${INPUT_REPORTER:-github-pr-check}" \
-      -filter-mode="${INPUT_FILTER_MODE}"            \
-      -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
-      -level="${INPUT_LEVEL}"                        \
-      ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
