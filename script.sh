@@ -68,9 +68,9 @@ if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
   echo '::group:: Installing types'
   echo 'Pre-run and detect missing stubs'
   # shellcheck disable=SC2086
-  ${INPUT_EXECUTE_COMMAND} \
-    ${TARGETS_LIST} 2>&1   \
-     || mypy_exit_val="$?"
+  mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                            ${TARGETS_LIST} 2>&1  \
+                            )" || mypy_exit_val="$?"
   # discard result
   echo 'Install types'
   ${INPUT_EXECUTE_COMMAND} --install-types --non-interactive
@@ -102,38 +102,73 @@ set +e
 #   first, user flags
 #   second, set reviewdog supplement flags(abspath, column num) and suppress pretty flag
 # same flag: win later
-# --hide-error-context : suppress error context NOTE: entry
-# shellcheck disable=SC2086
-${INPUT_EXECUTE_COMMAND}           \
-  ${INPUT_MYPY_FLAGS}              \
-  --output json                    \
-  --hide-error-context             \
-  --show-column-numbers            \
-  --show-absolute-path             \
-  --no-pretty                      \
-  ${TARGETS_LIST}                  \
-  > ${MYPYTMPDIR}/mypy_output.json \
-  2> /dev/null                     \
-  || mypy_exit_val="$?"
 
-# echo "mypy output result:"
-# cat "${MYPYTMPDIR}/mypy_output.json"
+if [[ "${INPUT_OUTPUT_JSON}" != "true" ]] ; then
+  # Do not use JSON output
 
-python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" < "${MYPYTMPDIR}/mypy_output.json" > "${MYPYTMPDIR}/mypy_rdjson.json"
+  # shellcheck disable=SC2086
+  mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
+                            ${INPUT_MYPY_FLAGS}   \
+                            --show-column-numbers \
+                            --show-absolute-path  \
+                            --no-pretty           \
+                            ${TARGETS_LIST} 2>&1  \
+                            )" || mypy_exit_val="$?"
 
-# echo "mypy output rdjson:"
-# cat "${MYPYTMPDIR}/mypy_rdjson.json"
+  # note ignore
+  IGNORE_NOTE_EFM_OPTION=("-efm=%-G%f:%l:%c: note: %m")
 
-# shellcheck disable=SC2086
-reviewdog                                                     \
-  -f=rdjson                                                   \
-  -name="${INPUT_TOOL_NAME:-mypy}"                            \
-  -reporter="${INPUT_REPORTER:-github-pr-check}"              \
-  -filter-mode="${INPUT_FILTER_MODE}"                         \
-  -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
-  -level="${INPUT_LEVEL}"                                     \
-  ${INPUT_REVIEWDOG_FLAGS} < "${MYPYTMPDIR}/mypy_rdjson.json" \
-  || reviewdog_exit_val="$?"
+  # shellcheck disable=SC2086
+  echo "${mypy_check_output}" | reviewdog              \
+        "${IGNORE_NOTE_EFM_OPTION[@]}"                 \
+        -efm="%f:%l:%c: %t%*[^:]: %m"                  \
+        -efm="%f:%l: %t%*[^:]: %m"                     \
+        -efm="%f: %t%*[^:]: %m"                        \
+        -name="${INPUT_TOOL_NAME:-mypy}"               \
+        -reporter="${INPUT_REPORTER:-github-pr-check}" \
+        -filter-mode="${INPUT_FILTER_MODE}"            \
+        -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
+        -level="${INPUT_LEVEL}"                        \
+        ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
+
+else
+  # Use JSON output
+  # require mypy==1.11 or higher
+
+  # --hide-error-context : suppress error context NOTE: entry
+  # shellcheck disable=SC2086
+  ${INPUT_EXECUTE_COMMAND}           \
+    ${INPUT_MYPY_FLAGS}              \
+    --output json                    \
+    --hide-error-context             \
+    --show-column-numbers            \
+    --show-absolute-path             \
+    --no-pretty                      \
+    ${TARGETS_LIST}                  \
+    > ${MYPYTMPDIR}/mypy_output.json \
+    2> /dev/null                     \
+    || mypy_exit_val="$?"
+
+  # echo "mypy output result:"
+  # cat "${MYPYTMPDIR}/mypy_output.json"
+
+  python3 "${BASE_PATH}/mypy_to_rdjson/mypy_to_rdjson.py" < "${MYPYTMPDIR}/mypy_output.json" > "${MYPYTMPDIR}/mypy_rdjson.json"
+
+  # echo "mypy output rdjson:"
+  # cat "${MYPYTMPDIR}/mypy_rdjson.json"
+
+  # shellcheck disable=SC2086
+  reviewdog                                                     \
+    -f=rdjson                                                   \
+    -name="${INPUT_TOOL_NAME:-mypy}"                            \
+    -reporter="${INPUT_REPORTER:-github-pr-check}"              \
+    -filter-mode="${INPUT_FILTER_MODE}"                         \
+    -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
+    -level="${INPUT_LEVEL}"                                     \
+    ${INPUT_REVIEWDOG_FLAGS} < "${MYPYTMPDIR}/mypy_rdjson.json" \
+    || reviewdog_exit_val="$?"
+fi
+
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
