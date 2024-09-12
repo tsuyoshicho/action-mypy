@@ -28,7 +28,7 @@ pyproject-hooks==1.1.0
     #   pip-tools
 requests==2.32.3
     # via -r requirements.in
-urllib3==2.2.2
+urllib3==2.2.3
     # via requests
 wheel==0.44.0
     # via pip-tools
