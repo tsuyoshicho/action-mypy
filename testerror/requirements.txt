@@ -18,7 +18,7 @@ colorama==0.4.6
     #   click
 idna==3.10
     # via requests
-packaging==24.1
+packaging==24.2
     # via build
 pip-tools==7.4.1
     # via -r requirements.in
