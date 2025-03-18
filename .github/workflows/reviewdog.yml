@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: reviewdog/action-alex@986cf7dd82e702f82b4173deaa793a849f5b719d # v1
+      - uses: reviewdog/action-alex@6083b8ca333981fa617c6828c5d8fb21b13d916b # v1
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-check
