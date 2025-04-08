@@ -30,7 +30,7 @@ requests==2.32.3
     # via -r requirements.in
 urllib3==2.3.0
     # via requests
-wheel==0.45.1
+wheel==0.46.1
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
