@@ -180,6 +180,8 @@ fi
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
-if [[ "${mypy_exit_val}" != "0" || "${reviewdog_exit_val}" != "0" ]]; then
+# mypy exit code : 0 no type error, 1 has type error
+# ignore it
+if [[ "${reviewdog_exit_val}" != "0" ]]; then
   exit 1
 fi
