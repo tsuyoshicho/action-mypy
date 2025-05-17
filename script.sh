@@ -70,7 +70,7 @@ if [[ "${INPUT_INSTALL_TYPES}" == "true" ]] ; then
   # shellcheck disable=SC2086
   mypy_check_output="$(${INPUT_EXECUTE_COMMAND}   \
                             ${TARGETS_LIST} 2>&1  \
-                            )" || mypy_exit_val="$?"
+                            )" || _mypy_exit_val="$?"
   # discard result
   echo 'Install types'
   ${INPUT_EXECUTE_COMMAND} --install-types --non-interactive
@@ -89,11 +89,11 @@ MYPYTMPDIR=$(mktemp -d)
 trap cleanup EXIT
 
 echo '::group:: Running mypy with reviewdog 🐶 ...'
-mypy_exit_val="0"
+_mypy_exit_val="0"
 reviewdog_exit_val="0"
 
 # Below from this line, errors are handled.
-# (mypy_exit_val and reviewdog_exit_val)
+# (_mypy_exit_val and reviewdog_exit_val)
 # Disable error report
 set +e
 
@@ -121,7 +121,7 @@ if [[ "${INPUT_OUTPUT_JSON}" != "true" ]] ; then
                             --show-absolute-path  \
                             --no-pretty           \
                             ${TARGETS_LIST} 2>&1  \
-                            )" || mypy_exit_val="$?"
+                            )" || _mypy_exit_val="$?"
 
   # note ignore
   IGNORE_NOTE_EFM_OPTION=("-efm=%-G%f:%l:%c: note: %m")
@@ -155,7 +155,7 @@ else
     ${TARGETS_LIST}                  \
     > ${MYPYTMPDIR}/mypy_output.json \
     2> /dev/null                     \
-    || mypy_exit_val="$?"
+    || _mypy_exit_val="$?"
 
   # echo "mypy output result:"
   # cat "${MYPYTMPDIR}/mypy_output.json"
@@ -180,6 +180,8 @@ fi
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
-if [[ "${mypy_exit_val}" != "0" || "${reviewdog_exit_val}" != "0" ]]; then
+# mypy exit code : 0 no type error, 1 has type error
+# ignore it
+if [[ "${reviewdog_exit_val}" != "0" ]]; then
   exit 1
 fi
