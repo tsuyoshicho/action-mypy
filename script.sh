@@ -103,6 +103,14 @@ set +e
 #   second, set reviewdog supplement flags(abspath, column num) and suppress pretty flag
 # same flag: win later
 
+fail_level="${INPUT_FAIL_LEVEL}"
+if [[ "${INPUT_FAIL_LEVEL}" == "none" ]] && [[ "${INPUT_FAIL_ON_ERROR}" == "true" ]]; then
+  fail_level="error"
+fi
+
+echo "report level is: ${INPUT_LEVEL}"
+echo "fail level is: ${fail_level}"
+
 if [[ "${INPUT_OUTPUT_JSON}" != "true" ]] ; then
   # Do not use JSON output
 
@@ -127,7 +135,7 @@ if [[ "${INPUT_OUTPUT_JSON}" != "true" ]] ; then
         -name="${INPUT_TOOL_NAME:-mypy}"               \
         -reporter="${INPUT_REPORTER:-github-pr-check}" \
         -filter-mode="${INPUT_FILTER_MODE}"            \
-        -fail-on-error="${INPUT_FAIL_ON_ERROR}"        \
+        -fail-level="${fail_level}"                    \
         -level="${INPUT_LEVEL}"                        \
         ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
 
@@ -163,7 +171,7 @@ else
     -name="${INPUT_TOOL_NAME:-mypy}"                            \
     -reporter="${INPUT_REPORTER:-github-pr-check}"              \
     -filter-mode="${INPUT_FILTER_MODE}"                         \
-    -fail-on-error="${INPUT_FAIL_ON_ERROR}"                     \
+    -fail-level="${fail_level}"                                 \
     -level="${INPUT_LEVEL}"                                     \
     ${INPUT_REVIEWDOG_FLAGS} < "${MYPYTMPDIR}/mypy_rdjson.json" \
     || reviewdog_exit_val="$?"
@@ -172,9 +180,6 @@ fi
 echo '::endgroup::'
 
 # Throw error if an error occurred and fail_on_error is true
-if [[ "${INPUT_FAIL_ON_ERROR}" == "true"       \
-      && ( "${mypy_exit_val}" != "0"           \
-           || "${reviewdog_exit_val}" != "0" ) \
-   ]]; then
+if [[ "${mypy_exit_val}" != "0" || "${reviewdog_exit_val}" != "0" ]]; then
   exit 1
 fi
