@@ -96,11 +96,20 @@ inputs:
       Default is added.
     required: false
     default: 'added'
+  fail_level:
+    description: |
+      Optional.  Exit code control for reviewdog, [none,any,info,warning,error]
+      Default is `none`.
+    default: 'none'
   fail_on_error:
     description: |
-      Exit code for reviewdog when errors are found [true,false]
+      Deprecated.
+
+      Optional.  Exit code for reviewdog when errors are found [true,false]
       Default is `false`.
-    required: false
+
+      If `true` is set, it will be interpreted as "-fail-level=error".
+      But if "-fail-level" is set non-`none`, it will be ignored.
     default: 'false'
   reviewdog_flags:
     description: 'Additional reviewdog flags'
