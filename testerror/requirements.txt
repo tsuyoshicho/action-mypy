@@ -12,10 +12,6 @@ charset-normalizer==3.4.2
     # via requests
 click==8.2.1
     # via pip-tools
-colorama==0.4.6
-    # via
-    #   build
-    #   click
 idna==3.10
     # via requests
 packaging==25.0
@@ -28,7 +24,7 @@ pyproject-hooks==1.2.0
     #   pip-tools
 requests==2.32.4
     # via -r requirements.in
-urllib3==2.4.0
+urllib3==2.5.0
     # via requests
 wheel==0.45.1
     # via pip-tools
