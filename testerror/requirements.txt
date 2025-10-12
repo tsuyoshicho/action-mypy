@@ -12,7 +12,7 @@ charset-normalizer==3.4.3
     # via requests
 click==8.3.0
     # via pip-tools
-idna==3.10
+idna==3.11
     # via requests
 packaging==25.0
     # via build
