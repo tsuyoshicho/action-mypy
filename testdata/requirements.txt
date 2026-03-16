@@ -8,7 +8,7 @@ build==1.4.0
     # via pip-tools
 certifi==2026.2.25
     # via requests
-charset-normalizer==3.4.5
+charset-normalizer==3.4.6
     # via requests
 click==8.3.1
     # via pip-tools
