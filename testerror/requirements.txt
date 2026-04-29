@@ -14,7 +14,7 @@ click==8.3.3
     # via pip-tools
 idna==3.11
     # via requests
-packaging==26.1
+packaging==26.2
     # via
     #   build
     #   wheel
