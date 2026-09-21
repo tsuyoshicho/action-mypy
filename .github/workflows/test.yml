@@ -30,7 +30,8 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-check
           level: warning
-          reviewdog_flags: -filter-mode=file -fail-on-error
+          filter_mode: file
+          fail_level: error
           setup_method: install
           workdir: ./testdata/
           target: success.py test.py
@@ -58,7 +59,8 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-check
           level: warning
-          reviewdog_flags: -filter-mode=file -fail-on-error
+          filter_mode: file
+          fail_level: error
           setup_method: install
           workdir: ./testdata/
           target: success.py test.py
@@ -86,7 +88,8 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           level: warning
-          reviewdog_flags: -filter-mode=file -fail-on-error
+          filter_mode: file
+          fail_level: any
           setup_method: install
           workdir: ./testdata/
           target: success.py test.py
@@ -114,7 +117,7 @@ jobs:
           reporter: local
           level: error
           filter_mode: nofilter
-          fail_on_error: true
+          fail_level: error
           setup_method: install
           workdir: ./testdata/
           target: success.py test.py
@@ -143,7 +146,7 @@ jobs:
           reporter: local
           level: error
           filter_mode: nofilter
-          fail_on_error: true
+          fail_level: error
           setup_method: install
           workdir: ./testerror/
           target: success.py test.py
