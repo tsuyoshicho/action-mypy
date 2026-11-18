@@ -228,7 +228,8 @@ which is useful for Docker container based actions.
 
 ### Dependencies Update Automation
 
-This repository uses [haya14busa/action-depup](https://github.com/haya14busa/action-depup) to update
-reviewdog version.
+This repository uses [reviewdog/action-depup/with-pr](https://github.com/reviewdog/action-depup)
+to check for new reviewdog releases and create a pull request that updates `REVIEWDOG_VERSION`
+in `action.yml`.
 
 [![reviewdog depup demo](https://user-images.githubusercontent.com/3797062/73154254-170e7500-411a-11ea-8211-912e9de7c936.png)](https://github.com/reviewdog/action-template/pull/6)
